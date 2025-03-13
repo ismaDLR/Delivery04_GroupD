@@ -21,8 +21,8 @@
 
 #define MAX_MAZE_ITEMS      16
 
-#define PLAYER_WIDTH        4
-#define PLAYER_HEIGHT       4
+#define PLAYER_WIDTH        7
+#define PLAYER_HEIGHT       7
 #define PLAYER_SPEED        3
 
 // Declare new data type: Point
@@ -97,7 +97,7 @@ int main(void)
     texBiomes[1] = LoadTexture("resources/maze_atlas02.png");
     texBiomes[2] = LoadTexture("resources/maze_atlas03.png");
     texBiomes[3] = LoadTexture("resources/maze_atlas04.png");
-    Texture2D spriteSheet = LoadTexture("resources/Character1.png");
+    Texture2D spriteSheet = LoadTexture("resources/Character.png");
 
     // TODO: Load additional textures for different biomes
     int currentBiome = 0;
@@ -424,6 +424,12 @@ int main(void)
                         else if (ColorIsEqual(GetImageColor(imMaze, x, y), RED))
                         {
                             DrawTexturePro(texBiomes[currentBiome], (Rectangle){ 0, 0, texBiomes[currentBiome].width/2, texBiomes[currentBiome].height/2 },
+                                (Rectangle){ mazePosition.x + x*MAZE_SCALE, mazePosition.y + y*MAZE_SCALE, MAZE_SCALE, MAZE_SCALE }, 
+                                (Vector2){ 0 }, 0.0f, WHITE);
+                        } 
+                         else if (ColorIsEqual(GetImageColor(imMaze, x, y), GREEN))
+                        {
+                            DrawTexturePro(texBiomes[currentBiome], (Rectangle){ texBiomes[currentBiome].width/2, 0, texBiomes[currentBiome].width/2, texBiomes[currentBiome].height/2 },
                                 (Rectangle){ mazePosition.x + x*MAZE_SCALE, mazePosition.y + y*MAZE_SCALE, MAZE_SCALE, MAZE_SCALE }, 
                                 (Vector2){ 0 }, 0.0f, WHITE);
                         } 
