@@ -183,17 +183,18 @@ int main(void)
                 currentRow = 4; 
             }
             
+            // Frames
                 if (frameTime >= 0.1f) {
                     currentFrame++;
                     
                     if (currentFrame >= 4) {
                         
-                        currentFrame = 0; // Resetea los fotogramas
+                        currentFrame = 0; 
                     }
 
-                    frameTime = 0.0f;  // Resetea el tiempo del fotograma
+                    frameTime = 0.0f;  
                 }
-                frameTime += GetFrameTime();  // Acumula el tiempo de cada frame
+                frameTime += GetFrameTime();  
 
             // TODO: [1p] Camera 2D system following player movement around the map
             // Update Camera2D parameters as required to follow player and zoom control
