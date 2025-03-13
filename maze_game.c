@@ -97,11 +97,22 @@ int main(void)
     texBiomes[1] = LoadTexture("resources/maze_atlas02.png");
     texBiomes[2] = LoadTexture("resources/maze_atlas03.png");
     texBiomes[3] = LoadTexture("resources/maze_atlas04.png");
+    Texture2D spriteSheet = LoadTexture("resources/Character1.png");
+
     // TODO: Load additional textures for different biomes
     int currentBiome = 0;
 
     // TODO: Define all variables required for game UI elements (sprites, fonts...)
     int score = 0;
+
+    // Character frames
+    int frameWidth = 48;
+    int frameHeight = 96;
+    int currentFrame = 0;
+    int currentRow = 0;
+    float frameTime = 0.1f;
+
+    Rectangle frameRec = {0, 0, frameWidth, frameHeight};
 
     SetTargetFPS(60);       // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -129,6 +140,8 @@ int main(void)
                     if ((player.x - mazePosition.x) / MAZE_SCALE > 0 && (player.y - mazePosition.y) / MAZE_SCALE > 0)
                     {
                         player.y -= PLAYER_SPEED;
+                        currentRow = 3; 
+                        
                     }
                 }
             } 
@@ -139,6 +152,7 @@ int main(void)
                     if ((player.x - mazePosition.x) / MAZE_SCALE < MAZE_WIDTH && (player.y - mazePosition.y) / MAZE_SCALE < MAZE_HEIGHT)
                     {
                         player.y += PLAYER_SPEED;
+                        currentRow = 0; 
                     }
                 }
             }
@@ -149,6 +163,7 @@ int main(void)
                     if ((player.x - mazePosition.x) / MAZE_SCALE > 0 && (player.y - mazePosition.y) / MAZE_SCALE > 0)
                     {
                         player.x -= PLAYER_SPEED;
+                        currentRow = 1; 
                     }
                 }
             }
@@ -159,9 +174,26 @@ int main(void)
                     if ((player.x - mazePosition.x) / MAZE_SCALE < MAZE_WIDTH && (player.y - mazePosition.y) / MAZE_SCALE < MAZE_HEIGHT)
                     {
                         player.x += PLAYER_SPEED;
+                        currentRow = 2; 
                     }
                 }
             }
+            else
+            {
+                currentRow = 4; 
+            }
+            
+                if (frameTime >= 0.1f) {
+                    currentFrame++;
+                    
+                    if (currentFrame >= 4) {
+                        
+                        currentFrame = 0; // Resetea los fotogramas
+                    }
+
+                    frameTime = 0.0f;  // Resetea el tiempo del fotograma
+                }
+                frameTime += GetFrameTime();  // Acumula el tiempo de cada frame
 
             // TODO: [1p] Camera 2D system following player movement around the map
             // Update Camera2D parameters as required to follow player and zoom control
@@ -345,6 +377,7 @@ int main(void)
         if (IsKeyDown(KEY_ONE))
         {
             currentBiome = 0;
+            currentBiome = 0;
         }
         else if (IsKeyDown(KEY_TWO))
         {
@@ -393,12 +426,17 @@ int main(void)
                             DrawTexturePro(texBiomes[currentBiome], (Rectangle){ 0, 0, texBiomes[currentBiome].width/2, texBiomes[currentBiome].height/2 },
                                 (Rectangle){ mazePosition.x + x*MAZE_SCALE, mazePosition.y + y*MAZE_SCALE, MAZE_SCALE, MAZE_SCALE }, 
                                 (Vector2){ 0 }, 0.0f, WHITE);
-                        }
+                        } 
                     }
                 }
-             
+                // Actualización del fotograma del sprite (animación)
+                frameRec.y = currentRow * frameHeight; 
+                frameRec.x = currentFrame * frameWidth;  
+                
                 // TODO: Draw player rectangle or sprite at player position
-                DrawRectangleRec(player, BLUE);
+                //DrawRectangleRec(player, BLUE);
+                DrawTexturePro(spriteSheet, frameRec, player, (Vector2){0, 0}, 0.0f, WHITE);
+
 
                 // TODO: Draw maze items 2d (using sprite texture?)
 
@@ -418,7 +456,8 @@ int main(void)
                 DrawRectangleLines(mazePosition.x, mazePosition.y, MAZE_WIDTH*MAZE_SCALE, MAZE_HEIGHT*MAZE_SCALE, RED);
 
                 // TODO: Draw player using a rectangle, consider maze screen coordinates!
-                DrawRectangleRec(player, BLUE);
+                //DrawRectangleRec(player, BLUE);
+                DrawTexturePro(spriteSheet, frameRec, player, (Vector2){0, 0}, 0.0f, WHITE);
 
                 // TODO: Draw editor UI required elements
             }
