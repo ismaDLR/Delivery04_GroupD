@@ -46,6 +46,8 @@ int main(void)
     const int screenHeight = 720;
 
     InitWindow(screenWidth, screenHeight, "Delivery04 - maze game");
+    
+    InitAudioDevice();              // Initialize audio device
 
     // Current application mode
     int currentMode = 1;    // 0-Game, 1-Editor
@@ -98,6 +100,10 @@ int main(void)
     texBiomes[2] = LoadTexture("resources/maze_atlas03.png");
     texBiomes[3] = LoadTexture("resources/maze_atlas04.png");
     Texture2D spriteSheet = LoadTexture("resources/Character.png");
+    Music music = LoadMusicStream("resources/retro_beat.mp3");
+    
+    PlayMusicStream(music);
+    float timePlayed = 0.0f;        // Time played normalized [0.0f..1.0f]
 
     // TODO: Load additional textures for different biomes
     int currentBiome = 0;
@@ -182,6 +188,15 @@ int main(void)
             {
                 currentRow = 4; 
             }
+                
+            // Music
+
+            UpdateMusicStream(music);   // Update music buffer with new stream data
+
+            // Get normalized time played for current music stream
+            timePlayed = GetMusicTimePlayed(music)/GetMusicTimeLength(music);
+
+            if (timePlayed > 1.0f) timePlayed = 1.0f;
             
             // Frames
                 if (frameTime >= 0.1f) {
@@ -229,6 +244,7 @@ int main(void)
             {
                 CloseWindow();
             }
+            
         }
         else if (currentMode == 1) // Editor mode
         {
@@ -485,6 +501,10 @@ int main(void)
     UnloadImage(imMaze);        // Unload maze image from RAM (CPU)
 
     // TODO: Unload all loaded resources
+    
+    UnloadMusicStream(music);   // Unload music stream buffers from RAM
+
+    CloseAudioDevice();         // Close audio device (music streaming is automatically stopped)
     
     CloseWindow();              // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
